@@ -1,8 +1,11 @@
 import pytest
 
 def fix_phone_num(phone_num_to_fix):
-    if len(phone_num_to_fix) != 10:
+    if len(phone_num_to_fix) == 11 and phone_num_to_fix.startswith("1"):
+        phone_num_to_fix = phone_num_to_fix[1:]
+    elif len(phone_num_to_fix) != 10:
         raise ValueError(f"phone number must be length 10; got \"{phone_num_to_fix}\" which is of length {len(phone_num_to_fix)}")
+
     if not phone_num_to_fix.isdigit():
         raise ValueError(f"phone number must only contain digits; got \"{phone_num_to_fix}\"")
 
@@ -36,3 +39,10 @@ def test_long_num_error():
 def test_non_digit_error():
   with pytest.raises(ValueError):
     fix_phone_num("012345678a")
+
+def test_fix_phone_num_country_code():
+    assert fix_phone_num("15125558823") == '(512) 555 8823'
+
+def test_wrong_country_code():
+    with pytest.raises(ValueError):
+        assert fix_phone_num("25125558823")
